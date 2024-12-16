@@ -81,6 +81,7 @@ class LocalWebserver : public Common::Singleton<LocalWebserver> {
 #endif // USE_LIBCURL
 #endif // USE_CLOUD
 	ResourceHandler _resourceHandler;
+	HelloHandler _helloHandler; // Pe34f
 	uint32 _idlingFrames;
 	Common::Mutex _handleMutex;
 	Common::String _address;
@@ -123,7 +124,13 @@ public:
 	static Common::String urlEncodeQueryParameterValue(const Common::String &value);
 };
 
-/** Shortcut for accessing the local webserver. */
+class HelloHandler : public BaseHandler { // P1ce8
+public:
+	void handle(Client &client) override {
+		LocalWebserver::setClientGetHandler(client, "Hello, World!", 200, "text/plain");
+	}
+};
+
 #define LocalServer     Networking::LocalWebserver::instance()
 
 } // End of namespace Networking
