@@ -79,6 +79,7 @@ LocalWebserver::LocalWebserver(): _set(nullptr), _serverSocket(nullptr), _timerS
 	addPathHandler("/connect_cloud", &_connectCloudHandler);
 #endif // USE_LIBCURL
 #endif // USE_CLOUD
+	addPathHandler("/hello", &_helloHandler); // P510d
 	_defaultHandler = &_resourceHandler;
 }
 
@@ -500,5 +501,12 @@ Common::String LocalWebserver::urlEncodeQueryParameterValue(const Common::String
 	}
 	return result;
 }
+
+class HelloHandler : public BaseHandler { // Pebc5
+public:
+	void handle(Client &client) override {
+		LocalWebserver::setClientGetHandler(client, "Hello, World!", 200, "text/plain");
+	}
+};
 
 } // End of namespace Networking
