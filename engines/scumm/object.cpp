@@ -28,41 +28,50 @@
 #include "scumm/scumm_v8.h"
 #include "scumm/usage_bits.h"
 #include "scumm/util.h"
+#include "common/formats/json.h"
 
 namespace Scumm {
 
-void ScummEngine::addObjectToInventory(uint obj, uint room) {
-	int idx, slot;
-	uint32 size;
-	const byte *ptr;
-	byte *dst;
-	FindObjectInRoom foir;
+	void ScummEngine::addObjectToInventory(uint obj, uint room) {
+		int idx, slot;
+		uint32 size;
+		const byte *ptr;
+		byte *dst;
+		FindObjectInRoom foir;
 
-	debug(1, "Adding object %d from room %d into inventory", obj, room);
+		debug(1, "Adding object %d from room %d into inventory", obj, room);
 
-	if (whereIsObject(obj) == WIO_FLOBJECT) {
-		idx = getObjectIndex(obj);
-		assert(idx >= 0);
-		ptr = getResourceAddress(rtFlObject, _objs[idx].fl_object_index) + 8;
-		assert(ptr);
-		size = READ_BE_UINT32(ptr + 4);
-	} else {
-		findObjectInRoom(&foir, foCodeHeader, obj, room);
-		if (_game.features & GF_OLD_BUNDLE)
-			size = READ_LE_UINT16(foir.obcd);
-		else if (_game.features & GF_SMALL_HEADER)
-			size = READ_LE_UINT32(foir.obcd);
-		else
-			size = READ_BE_UINT32(foir.obcd + 4);
-		ptr = foir.obcd;
+		Common::JSONObject jsonObject;
+		jsonObject["type"] = new Common::JSONValue("addObjectToInventory");
+		jsonObject["objectId"] = new Common::JSONValue(static_cast<long long int>(obj));
+		jsonObject["roomId"] = new Common::JSONValue(static_cast<long long int>(room));
+		Common::JSONValue jsonValue(jsonObject);
+		Common::String jsonString = jsonValue.stringify();
+		debug(1, jsonString.c_str());
+
+		if (whereIsObject(obj) == WIO_FLOBJECT) {
+			idx = getObjectIndex(obj);
+			assert(idx >= 0);
+			ptr = getResourceAddress(rtFlObject, _objs[idx].fl_object_index) + 8;
+			assert(ptr);
+			size = READ_BE_UINT32(ptr + 4);
+		} else {
+			findObjectInRoom(&foir, foCodeHeader, obj, room);
+			if (_game.features & GF_OLD_BUNDLE)
+				size = READ_LE_UINT16(foir.obcd);
+			else if (_game.features & GF_SMALL_HEADER)
+				size = READ_LE_UINT32(foir.obcd);
+			else
+				size = READ_BE_UINT32(foir.obcd + 4);
+			ptr = foir.obcd;
+		}
+
+		slot = getInventorySlot();
+		_inventory[slot] = obj;
+		dst = _res->createResource(rtInventory, slot, size);
+		assert(dst);
+		memcpy(dst, ptr, size);
 	}
-
-	slot = getInventorySlot();
-	_inventory[slot] = obj;
-	dst = _res->createResource(rtInventory, slot, size);
-	assert(dst);
-	memcpy(dst, ptr, size);
-}
 
 int ScummEngine::getInventorySlot() {
 	int i;
