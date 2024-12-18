@@ -111,6 +111,9 @@ ScummDebugger::ScummDebugger(ScummEngine *s)
 #endif
 
 	registerCmd("resetcursors",    WRAP_METHOD(ScummDebugger, Cmd_ResetCursors));
+
+	registerCmd("ping",      WRAP_METHOD(ScummDebugger, Cmd_Ping));
+
 }
 
 void ScummDebugger::preEnter() {
@@ -422,6 +425,8 @@ bool ScummDebugger::Cmd_Show(int argc, const char **argv) {
 	}
 	return true;
 }
+
+
 
 bool ScummDebugger::Cmd_Hide(int argc, const char **argv) {
 
@@ -930,15 +935,15 @@ bool ScummDebugger::Cmd_PrintActor(int argc, const char **argv) {
 	Actor *a;
 
 	debugPrintf("+----------------------------------------------------------------------------+\n");
-	debugPrintf("|# |    name    |  x |  y | w | h |elev|cos|box|mov| zp|frm|scl|dir|   cls   |\n");
-	debugPrintf("+--+------------+----+----+---+---+----+---+---+---+---+---+---+---+---------+\n");
+	debugPrintf("|# |            name            |  x |  y | w | h |elev|cos|box|mov| zp|frm|scl|dir|   cls   |\n");
+	debugPrintf("+--+----------------------------+----+----+---+---+----+---+---+---+---+---+---+---+---------+\n");
 	for (i = 1; i < _vm->_numActors; i++) {
 		a = _vm->_actors[i];
 		const byte *name = _vm->getObjOrActorName(_vm->actorToObj(a->_number));
 		if (!name)
 			name = (const byte *)"(null)";
 		if (a->_visible)
-			debugPrintf("|%2d|%-12.12s|%4d|%4d|%3d|%3d|%4d|%3d|%3d|%3d|%3d|%3d|%3d|%3d|$%08x|\n",
+			debugPrintf("|%2d|%-24.24s|%4d|%4d|%3d|%3d|%4d|%3d|%3d|%3d|%3d|%3d|%3d|%3d|$%08x|\n",
 						 a->_number, name, a->getRealPos().x, a->getRealPos().y, a->_width,  a->_bottom - a->_top,
 						 a->getElevation(),
 						 a->_costume, a->_walkbox, a->_moving, a->_forceClip, a->_frame,
