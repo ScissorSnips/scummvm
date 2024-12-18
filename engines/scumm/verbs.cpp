@@ -29,6 +29,7 @@
 #include "scumm/scumm_v7.h"
 #include "scumm/string_v7.h"
 #include "scumm/verbs.h"
+#include "common/formats/json.h"
 
 namespace Scumm {
 
@@ -181,10 +182,24 @@ void ScummEngine_v0::resetVerbs() {
 		vs->curRect.left = vs->origLeft = vtable[i - 1].x_pos * 8;
 		vs->curRect.top = vtable[i - 1].y_pos * 8 + virt->topline + 8;
 		loadPtrToResource(rtVerb, i, (const byte*)vtable[i - 1].name);
+
+		Common::JSONObject jsonObject;
+		jsonObject["type"] = new Common::JSONValue("ScummEngine_v0::resetVerbs");
+		jsonObject["name"] = new Common::JSONValue(vtable[i - 1].name);
+		jsonObject["verbid"] = new Common::JSONValue(static_cast<long long int>(vtable[i - 1].id));
+		Common::JSONValue jsonValue(jsonObject);
+		Common::String jsonString = jsonValue.stringify();
+		debug(1, jsonString.c_str());
 	}
 }
 
 void ScummEngine_v0::switchActor(int slot) {
+	Common::JSONObject jsonObject;
+	jsonObject["type"] = new Common::JSONValue("ScummEngine_v0::switchActor()");
+	Common::JSONValue jsonValue(jsonObject);
+	Common::String jsonString = jsonValue.stringify();
+	debug(1, jsonString.c_str());
+
 	resetSentence();
 
 	// actor switching only allowed during normal gamplay (not cutscene, ...)
@@ -196,6 +211,13 @@ void ScummEngine_v0::switchActor(int slot) {
 }
 
 void ScummEngine_v2::initV2MouseOver() {
+
+	Common::JSONObject jsonObject;
+	jsonObject["type"] = new Common::JSONValue("ScummEngine_v2::initV2MouseOver");
+	Common::JSONValue jsonValue(jsonObject);
+	Common::String jsonString = jsonValue.stringify();
+	debug(1, jsonString.c_str());
+
 	int i;
 	int arrow_color, color;
 	_hiLiteColorVerbArrow = _hiLiteColorInvSentence = 14;
@@ -327,6 +349,12 @@ void ScummEngine_v2::initNESMouseOver() {
 }
 
 void ScummEngine_v2::checkV2MouseOver(Common::Point pos) {
+	Common::JSONObject jsonObject;
+	jsonObject["type"] = new Common::JSONValue("ScummEngine_V2::checkV2MouseOver()");
+	Common::JSONValue jsonValue(jsonObject);
+	Common::String jsonString = jsonValue.stringify();
+	debug(1, jsonString.c_str());
+
 	VirtScreen *vs = &_virtscr[kVerbVirtScreen];
 	Common::Rect rect;
 	byte *dst;
@@ -387,6 +415,12 @@ void ScummEngine_v2::checkV2MouseOver(Common::Point pos) {
 }
 
 int ScummEngine_v2::checkV2Inventory(int x, int y) {
+	Common::JSONObject jsonObject;
+	jsonObject["type"] = new Common::JSONValue("ScummEngine_v2::checkV2Inventory()");
+	Common::JSONValue jsonValue(jsonObject);
+	Common::String jsonString = jsonValue.stringify();
+	debug(1, jsonString.c_str());
+
 	bool isNES = (_game.platform == Common::kPlatformNES);
 	int inventoryArea = isNES ? 48 : 32;
 	int object = 0;
@@ -421,6 +455,12 @@ int ScummEngine_v2::checkV2Inventory(int x, int y) {
 }
 
 void ScummEngine_v2::redrawV2Inventory() {
+	Common::JSONObject jsonObject;
+	jsonObject["type"] = new Common::JSONValue("ScummEngine_v2::redrawV2Inventory()");
+	Common::JSONValue jsonValue(jsonObject);
+	Common::String jsonString = jsonValue.stringify();
+	debug(1, jsonString.c_str());
+
 	VirtScreen *vs = &_virtscr[kVerbVirtScreen];
 	int maxVisibleInv, invCount, obj;
 	Common::Rect inventoryBox;
@@ -503,6 +543,12 @@ void ScummEngine_v2::redrawV2Inventory() {
 }
 
 void ScummEngine::redrawVerbs() {
+	Common::JSONObject jsonObject;
+	jsonObject["type"] = new Common::JSONValue("ScummEngine::redrawVerbs");
+	Common::JSONValue jsonValue(jsonObject);
+	Common::String jsonString = jsonValue.stringify();
+	debug(1, jsonString.c_str());
+
 	if (_game.version <= 2 && !(_userState & USERSTATE_IFACE_VERBS)) // Don't draw verbs unless active
 		return;
 
@@ -525,6 +571,12 @@ void ScummEngine::redrawVerbs() {
 }
 
 void ScummEngine::handleMouseOver(bool updateInventory) {
+	// Common::JSONObject jsonObject;
+	// jsonObject["type"] = new Common::JSONValue("ScummEngine::handleMouseOver");
+	// Common::JSONValue jsonValue(jsonObject);
+	// Common::String jsonString = jsonValue.stringify();
+	// debug(1, jsonString.c_str());
+
 	if (_completeScreenRedraw) {
 		verbMouseOver(0);
 	} else {
@@ -534,6 +586,12 @@ void ScummEngine::handleMouseOver(bool updateInventory) {
 }
 
 void ScummEngine_v2::handleMouseOver(bool updateInventory) {
+	Common::JSONObject jsonObject;
+	jsonObject["type"] = new Common::JSONValue("ScummEngine_v2::handleMouseOver");
+	Common::JSONValue jsonValue(jsonObject);
+	Common::String jsonString = jsonValue.stringify();
+	debug(1, jsonString.c_str());
+
 	ScummEngine::handleMouseOver(updateInventory);
 
 	if (updateInventory) {
@@ -547,6 +605,11 @@ void ScummEngine_v2::handleMouseOver(bool updateInventory) {
 }
 
 void ScummEngine_v0::handleMouseOver(bool updateInventory) {
+	Common::JSONObject jsonObject;
+	jsonObject["type"] = new Common::JSONValue("ScummEngine_v0::handleMouseOver");
+	Common::JSONValue jsonValue(jsonObject);
+	Common::String jsonString = jsonValue.stringify();
+	debug(1, jsonString.c_str());
 	ScummEngine_v2::handleMouseOver(updateInventory);
 }
 

@@ -26,6 +26,7 @@
 #include "audio/mixer.h"
 
 #include "backends/keymapper/keymapper.h"
+#include "common/formats/json.h"
 
 #include "scumm/debugger.h"
 #include "scumm/dialogs.h"
@@ -107,6 +108,13 @@ void ScummEngine_v80he::parseEvent(Common::Event event) {
 #endif
 
 void ScummEngine::parseEvent(Common::Event event) {
+	
+	Common::JSONObject jsonObject;
+	jsonObject["type"] = new Common::JSONValue("parseEvents()");
+	Common::JSONValue jsonValue(jsonObject);
+	Common::String jsonString = jsonValue.stringify();
+	debug(1, jsonString.c_str());
+
 	// Handle Macintosh events before scaling the mouse coordinates.
 	//
 	// TODO: Don't allow menu while message banner is active. Don't allow
