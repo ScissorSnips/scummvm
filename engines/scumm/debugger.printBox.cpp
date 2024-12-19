@@ -14,10 +14,19 @@
 #include "scumm/scumm.h"
 #include "scumm/sound.h"
 
-#include "scumm/akos.h"
 namespace Scumm {
-    bool ScummDebugger::Cmd_Ping(int argc, const char **argv) {
-        debugPrintf("Ping!\n");
-        return true;
-    }
+bool ScummDebugger::Cmd_PrintBox(int argc, const char **argv) {
+	int num, i = 0;
+
+	if (argc > 1) {
+		for (i = 1; i < argc; i++)
+			printBox(atoi(argv[i]));
+	} else {
+		num = _vm->getNumBoxes();
+		debugPrintf("\nWalk boxes:\n");
+		for (i = 0; i < num; i++)
+			printBox(i);
+	}
+	return true;
+}
 }
