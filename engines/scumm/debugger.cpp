@@ -59,6 +59,7 @@
 #include "scumm/debugger.script.cpp"
 #include "scumm/debugger.show.cpp"
 #include "scumm/debugger.ping.cpp"
+#include "scumm/debuggerHello.cpp"
 
 namespace Scumm {
 
@@ -136,6 +137,8 @@ ScummDebugger::ScummDebugger(ScummEngine *s)
 	registerCmd("resetcursors",    WRAP_METHOD(ScummDebugger, Cmd_ResetCursors));
 
 	registerCmd("ping",      WRAP_METHOD(ScummDebugger, Cmd_Ping));
+	registerCmd("hello",      WRAP_METHOD(ScummDebugger, Cmd_Hello));
+
 
 }
 

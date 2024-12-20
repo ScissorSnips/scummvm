@@ -81,6 +81,12 @@ private:
 	void drawBox(int box, int color);
 	void drawRect(int x, int y, int width, int height, int color);
 	int getNextColor();
+
+	// void listInventory(int owner);
+	//Create an entry for hello
+	bool Cmd_Hello(int argc, const char **argv);
+    Common::JSONValue* generateHelloJSONRequest();
+
 };
 
 } // End of namespace Scumm
